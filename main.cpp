@@ -1,7 +1,6 @@
 // iterator.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
 #include "tree.h"
 //#include "iterator.h"
 #include <iostream>
