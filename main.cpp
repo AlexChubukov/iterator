@@ -14,6 +14,10 @@ int main() {
 	for (; it != end; ++it) {
 		std::cout << *it << '|';
 	}
+	std::cout << std::endl;
+	for (auto &item : tree) {
+		std::cout << item << "|";
+	}
 
 	std::cout << std::endl;
 
