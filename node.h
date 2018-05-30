@@ -9,7 +9,22 @@ namespace BSTree {
 		Node<T> *left;
 		Node<T> *right;
 		Node<T> *parent;
+
+		Node();
+		Node(T val, Node<T> *parent);
 	};
+
+
+	template<typename T>
+	Node<T>::Node() :left(nullptr), right(nullptr), parent(nullptr),data(NULL) {
+	}
+
+	template <typename T>
+	Node<T>::Node(T val, Node<T> *parent) : left(nullptr), right(nullptr) {
+		data = val;
+		this->parent = parent;
+	}
+
 }
 
 #endif

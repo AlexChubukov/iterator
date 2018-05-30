@@ -1,62 +1,135 @@
 //#ifndef tree_h
 //#define tree_h
 #include "iterator.h"
+#include "node.h"
 #include <initializer_list>
 
 namespace BSTree {
 
 	template <typename T>
 	class Tree {
+		Node<T> *root;
 	public:
-		using iterator = pre_iterator::iterator<T>;
-		using reverse_iterator = post_iterator::iterator<T>;
-		//typedef pre_iterator<T>::iterator<T> iterator;
-		//typedef post_iterator<T>::iterator<T> reverse_iterator;
-
+		Tree();
 		Tree(std::initializer_list<T>);
+		auto insert(T val) -> bool;
 
-		void push_back(const T&);
+		auto begin()-> pre_iterator<T>;
+		auto end() -> pre_iterator<T>;
 
-		iterator begin();
-		iterator end();
+		auto rbegin() -> post_iterator<T>;
+		auto rend() -> post_iterator<T>;
 
-		reverse_iterator rbegin();
-		reverse_iterator rend();
+		void print() const;
 
 	private:
-		Node<T>* root;
+		void print(Node<T> *node, int level) const;
 	};
-}
 
-template <typename T>
-BSTree::Tree<T>::Tree(std::initializer_list<T> list) : Tree() {
-	for (auto& item : list) {
-		this->insert(item);
+
+	template<typename T>
+	Tree<T>::Tree() {
+		root = nullptr;
 	}
-}
 
-template<typename T>
-void BSTree::Tree<T>::push_back(const T &) {
-}
+	template <typename T>
+	Tree<T>::Tree(std::initializer_list<T> list) : Tree() {
+		for (auto& item : list) {
+			this->insert(item);
+		}
+	}
 
-template<typename T>
-//iterator BSTree::Tree<T>::begin(){
-BSTree::iterator BSTree::Tree<T>::begin() {
-}
+	template <typename T>
+	auto Tree<T>::insert(T val) -> bool {
+		Node<T> *p = root;
+		while (p != nullptr) {
+			if (p->data != val) {
+				if (val > p->data && p->right == nullptr) {
+					p->right = new Node<T>{ val , p};
+					return true;
+				}
+				if (val < p->data && p->left == nullptr) {
+					p->left = new Node<T>{ val, p };
+					return true;
+				}
+				val > p->data ? p = p->right : p = p->left;
+				continue;
+			}
+			return false;
+		}
+		root = new Node<T>{ val,p };
+		return true;
+	}
 
-template<typename T>
-BSTree::reverse_iterator BSTree::Tree<T>::end() {
-	return BSTree::reverse_iterator;
-}
+	template<typename T>
+	pre_iterator<T> Tree<T>::begin() {
+		Node<T> *p = root;
+		while (p->left!=nullptr) {
+			p = p->left;
+		}
+		pre_iterator<T> temp(p);
+		return temp;
+	}
 
-template<typename T>
-BSTree::reverse_iterator BSTree::Tree<T>::rbegin() {
-	return BSTree::reverse_iterator;
-}
+	template<typename T>
+	pre_iterator<T> Tree<T>::end() {
+		Node<T> *p = root;
+		while (p->right != nullptr) {
+			p = p->right;
+		}
+		pre_iterator<T> temp(p->right);
+		return temp;
+	}
 
-template<typename T>
-BSTree::reverse_iterator BSTree::Tree<T>::rend() {
-	return BSTree::reverse_iterator;
+	template<typename T>
+	post_iterator<T> Tree<T>::rbegin() {
+		Node<T> *p = root;
+		while (p->right != nullptr) {
+			p = p->right;
+		}
+		post_iterator<T> temp(p);
+		return temp;
+	}
+
+	template<typename T>
+	post_iterator<T> Tree<T>::rend() {
+		Node<T> *p = root;
+		while (p->left != nullptr) {
+			p = p->left;
+		}
+		post_iterator<T> temp(p->left);
+		return temp;
+	}
+
+	template <typename T>
+	void Tree<T>::print() const {
+		print(root, 0);
+	}
+
+	template <typename T>
+	void Tree<T>::print(Node<T> * node, int depth) const {
+		if (root == nullptr) {
+			std::cout << "Дерево пусто!" << std::endl;
+		}
+		int temp_depth = depth;
+		if (node != nullptr) {
+			if (node == root) {
+				print(node->right, temp_depth);
+				std::cout << std::endl;
+				std::cout << node->data;
+				std::cout << std::endl;
+				print(node->left, temp_depth);
+				return;
+			}
+			temp_depth++;
+			print(node->right, temp_depth);
+			for (int i = 0; i < temp_depth; i++)  std::cout << "   ";
+			std::cout << "- " << node->data << std::endl;
+			print(node->left, temp_depth);
+			temp_depth--;
+			return;
+		}
+	}
 }
 
 
