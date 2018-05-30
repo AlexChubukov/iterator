@@ -189,7 +189,7 @@ namespace BSTree {
 
 	template<typename T>
 	T * pre_iterator<T>::operator->() const {
-		return &(this->ptr->data);
+		return this->ptr->data.;
 	}
 
 	template<typename T>
@@ -304,6 +304,6 @@ namespace BSTree {
 
 	template<typename T>
 	T * post_iterator<T>::operator->() const {
-		return &(this->ptr->data);
+		return this->ptr->data.;
 	}
 }
