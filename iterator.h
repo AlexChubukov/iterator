@@ -1,5 +1,3 @@
-
-
 #include "node.h"
 
 namespace BSTree {
@@ -19,6 +17,7 @@ namespace BSTree {
 		pre_iterator<T>& operator++(int);
 		pre_iterator<T>& operator--();
 		pre_iterator<T>& operator--(int);
+		T* operator->() const;
 
 		friend bool operator==(const pre_iterator<T> &iter1, const pre_iterator<T> &iter2) {
 			return iter1.ptr == iter2.ptr;
@@ -36,7 +35,7 @@ namespace BSTree {
 
 	private:
 		Node<T> *ptr;
-	}; 
+	};
 
 	template <typename T>
 	class post_iterator {
@@ -54,6 +53,7 @@ namespace BSTree {
 		post_iterator<T>& operator++(int);
 		post_iterator<T>& operator--();
 		post_iterator<T>& operator--(int);
+		T* operator->() const;
 
 		friend bool operator==(const post_iterator<T> &iter1, const post_iterator<T> &iter2) {
 			return iter1.ptr == iter2.ptr;
@@ -132,7 +132,7 @@ namespace BSTree {
 	}
 
 	template<typename T>
-	pre_iterator<T>& pre_iterator<T>::operator++(int value){
+	pre_iterator<T>& pre_iterator<T>::operator++(int value) {
 		pre_iterator<T> temp(*this);
 		if (value) {
 			for (int i = value; value > 0; --value) {
@@ -188,7 +188,12 @@ namespace BSTree {
 	}
 
 	template<typename T>
-	post_iterator<T>::post_iterator() : ptr(nullptr ){}
+	T * pre_iterator<T>::operator->() const {
+		return &(this->ptr->data);
+	}
+
+	template<typename T>
+	post_iterator<T>::post_iterator() : ptr(nullptr) {}
 
 	template<typename T>
 	post_iterator<T>::post_iterator(Node<T> * p) : ptr(p) {}
@@ -295,5 +300,10 @@ namespace BSTree {
 		}
 		--(*this);
 		return temp;
+	}
+
+	template<typename T>
+	T * post_iterator<T>::operator->() const {
+		return &(this->ptr->data);
 	}
 }
